@@ -21,7 +21,8 @@ export function startAnimation() {
 
 function populateGarden(canvas: HTMLCanvasElement, garden: Garden) {
     garden.clear();
-    let wordGridPoints = generatePixelGrid('Happy Birthday Geoff' , window.innerWidth, window.innerHeight);
+    let message: string = location.hash.slice(1) || 'Flowers are everywhere';
+    let wordGridPoints = generatePixelGrid(message , window.innerWidth, window.innerHeight);
     canvas.setAttribute('width', `${window.innerWidth}`);
     canvas.setAttribute('height', `${window.innerHeight}`);
     wordGridPoints.forEach((point) => {
@@ -44,5 +45,8 @@ function bindEvents(canvas: HTMLCanvasElement, garden: Garden): void {
     });
     window.addEventListener('resize', () => {
         populateGarden(canvas, garden);
-    })
+    });
+    window.addEventListener('hashchange', () => {
+        populateGarden(canvas, garden);
+    });
 }

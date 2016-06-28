@@ -6,7 +6,7 @@ const SEED_GRID_SIZE = 16;
 
 
 export function generatePixelGrid(phrase: string, maxWidth: number, maxHeight: number): Vector[] {
-  let words = phrase.split(/\s+/);
+  let words = phrase.split(/\W+/);
   let wordHeight = Math.floor(maxHeight / words.length);
 
   let widths = words.map(word => {
