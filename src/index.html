@@ -2,24 +2,41 @@
 <html>
 <head>
   <title>Flowers</title>
-
-  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,400italic" rel="stylesheet" type="text/css">
+  <meta
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    name="viewport">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
 
-  <meta name="author" content="Euan Goddard" />
-  <meta name="description" content="Flowers for you" />
+  <meta name="author" content="Euan Goddard"/>
+  <meta name="description" content="Flowers for you"/>
 
   <!-- inject:css -->
   <!-- endinject -->
 
 </head>
 <body>
+  <div class="modal" id="welcome">
+    <div class="modal-content">
+      <h1>Welcome to your garden</h1>
+      <p>
+        Move your mouse or finger over the garden and flowers will start to grow to
+        reveal a hidden message.
+      </p>
+      <p class="small-screen-warning">
+        It may be hard to see the message on your screen, try rotating your device
+        to give it a bit more room.
+      </p>
+      ` <button type="button" id="close-welcome">Let's garden</button>
+    </div>
+  </div>
+
   <!-- inject:js -->
   <!-- endinject -->
   <script>
     System.config({
-        packages: { 'js': { defaultExtension: 'js' } }
+      packages: {'js': {defaultExtension: 'js'}}
     });
 
     System.import('/js/bootstrap').catch(console.error.bind(console));

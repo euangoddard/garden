@@ -1,6 +1,6 @@
-import { Garden } from './garden';
-import { Vector } from './vector';
-import { generatePixelGrid } from './word-pixels';
+import { Garden } from "./garden";
+import { Vector } from "./vector";
+import { generatePixelGrid } from "./word-pixels";
 import { setCanvasSize } from "./canvas-utils";
 
 
@@ -52,12 +52,13 @@ function bindEvents(canvas: HTMLCanvasElement, garden: Garden): void {
   });
 
   canvas.addEventListener('touchmove', (event: TouchEvent): void => {
+    event.preventDefault();
     Array.prototype.forEach.call(event.touches, (touch: Touch) => {
       garden.startBlooms(new Vector(touch.clientX, touch.clientY));
     });
   });
 
-  canvas.addEventListener('click', () => {
+  canvas.addEventListener('dblclick', () => {
     garden.startAllBlooms();
   });
 
@@ -67,5 +68,9 @@ function bindEvents(canvas: HTMLCanvasElement, garden: Garden): void {
 
   window.addEventListener('hashchange', () => {
     populateGarden(canvas, garden);
+  });
+  
+  document.querySelector('#close-welcome').addEventListener('click', () => {
+    document.querySelector('#welcome').classList.add('hidden');
   });
 }
