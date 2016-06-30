@@ -75,11 +75,11 @@ gulp.task('build-html', ['sass', 'copy-system-js'], function () {
 });
 
 
-gulp.task('copy-cname', function () {
-  gulp.src('./src/CNAME').pipe(gulp.dest('./dist'));
+gulp.task('copy-static-files', function () {
+  gulp.src('./src/static/**/*').pipe(gulp.dest('./dist'));
 });
 
-gulp.task('build', ['build-html', 'compile-typescript']);
+gulp.task('build', ['build-html', 'compile-typescript', 'copy-static-files']);
 
 
 gulp.task('serve', ['default'], function () {
@@ -106,7 +106,7 @@ gulp.task('generate-service-worker', function (callback) {
 });
 
 
-gulp.task('gh-pages', ['build', 'copy-cname', 'generate-service-worker'], function () {
+gulp.task('gh-pages', ['build', 'generate-service-worker'], function () {
   return gulp.src('./dist/**/*').pipe($.ghPages());
 });
 
