@@ -1,8 +1,10 @@
-import { Vector } from './vector';
+import { Vector } from "./vector";
+import { setCanvasSize } from "./canvas-utils";
 
 const BOX_PADDING = 20;
 
-const SEED_GRID_SIZE = 16;
+
+const SEED_GRID_FACTOR = 160;
 
 
 export function generatePixelGrid(phrase: string, maxWidth: number, maxHeight: number): Vector[] {
@@ -47,9 +49,7 @@ export function generatePixelGrid(phrase: string, maxWidth: number, maxHeight: n
 function measureWord(word: string, height: number) {
   let canvas = document.createElement('canvas');
   let ctx = canvas.getContext('2d');
-
-  let fontDeclaration = `${height}px sans-serif`;
-  ctx.font = fontDeclaration;
+  ctx.font = `${height}px sans-serif`;
   let width = Math.ceil(ctx.measureText(word).width);
   return width;
 }
@@ -88,8 +88,11 @@ function isPixelLit(pixelGrid: boolean[], gridWidth: number, gridHeight: number,
 
 
 function generateSeedPoints(pixelGrid: boolean[], gridWidth: number, gridHeight: number, maxGridWidth: number, index: number) {
-  let points: Vector[] = [];
+  const SEED_GRID_SIZE = getSeedGridSize();
+
   const xOffset = Math.floor((maxGridWidth - gridWidth) / 2) + BOX_PADDING;
+
+  let points: Vector[] = [];
   for (let i = 0, x: number; i < gridWidth; i += SEED_GRID_SIZE) {
     for (let j = 0, y: number; j < gridHeight; j += SEED_GRID_SIZE) {
       x = Math.min(Math.round(Math.random() * SEED_GRID_SIZE) + i, gridWidth);
@@ -103,7 +106,6 @@ function generateSeedPoints(pixelGrid: boolean[], gridWidth: number, gridHeight:
 }
 
 
-function setCanvasSize(canvas: HTMLCanvasElement, width: number, height: number): void {
-  canvas.setAttribute('width', `${width}`);
-  canvas.setAttribute('height', `${height}`);
+function getSeedGridSize() {
+  return Math.round((window.innerWidth + window.innerHeight) / SEED_GRID_FACTOR);
 }

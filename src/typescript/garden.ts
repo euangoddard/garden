@@ -157,10 +157,11 @@ export class Garden {
   }
 
   createRandomBloom(x: number, y: number): void {
+    let bloomRadiusRange = this.bloomRadiusRange;
     this.createBloom(
       x,
       y,
-      randomInt(Garden.options.bloomRadius.min, Garden.options.bloomRadius.max),
+      randomInt(bloomRadiusRange.min, bloomRadiusRange.max),
       getRandomRGBA(Garden.options.color.min, Garden.options.color.max, Garden.options.color.opacity),
       randomInt(Garden.options.petalCount.min, Garden.options.petalCount.max)
     );
@@ -175,6 +176,20 @@ export class Garden {
     this.ctx.clearRect(0, 0, this.element.width, this.element.height);
   }
 
+  get bloomRadiusRange(): Range  {
+    return {
+      min: this.scaleWindowSizeByFactor(Garden.BLOOM_RADIUS_RANGE_FACTORS.min),
+      max: this.scaleWindowSizeByFactor(Garden.BLOOM_RADIUS_RANGE_FACTORS.max)
+    };
+  }
+
+  private scaleWindowSizeByFactor(factor: number): number {
+    let averageWindowSize = (window.innerWidth + window.innerHeight) / 2;
+    return Math.round(averageWindowSize / factor);
+  }
+
+  private static BLOOM_RADIUS_RANGE_FACTORS: Range = {min: 240, max: 75};
+
   public static options = {
     petalCount: {
       min: 5,
@@ -187,10 +202,6 @@ export class Garden {
     growFactor: {
       min: 0.1,
       max: 1
-    },
-    bloomRadius: {
-      min: 5,
-      max: 20
     },
     bloomStartDistance: 20,
     color: {
@@ -236,3 +247,9 @@ function randomInt(min: number, max: number): number {
 
 
 const square = (x: number): number => x ** 2;
+
+
+interface Range {
+  max: number,
+  min: number
+}
