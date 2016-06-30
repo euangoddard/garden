@@ -10,10 +10,7 @@ const SEED_GRID_FACTOR = 160;
 export function generatePixelGrid(phrase: string, maxWidth: number, maxHeight: number): Vector[] {
   let words = phrase.split(/\W+/);
   let wordHeight = Math.floor(maxHeight / words.length);
-
-  let widths = words.map(word => {
-    return measureWord(word, wordHeight);
-  });
+  var widths = measureWidths(words, wordHeight);
 
   let maxMeasuredWidth = Math.max(...widths);
   let maxPaddedWidth = maxWidth - (2 * BOX_PADDING);
@@ -23,35 +20,40 @@ export function generatePixelGrid(phrase: string, maxWidth: number, maxHeight: n
     widths = widths.map((width: number) => {
       return Math.floor(width * scaleFactor);
     });
-
   }
-
-  let pixelGrids: boolean[][] = [];
-  for (let i = 0, word: string, width: number; i < words.length; i++) {
-    word = words[i];
-    width = widths[i];
-    pixelGrids.push(calculatePixelGrid(word, width, wordHeight));
-  }
-
-  let points: Vector[] = [];
-  for (let i = 0, pixelGrid: boolean[], width: number, wordPoints: Vector[]; i < words.length; i++) {
-    pixelGrid = pixelGrids[i];
-    width = widths[i];
-    wordPoints = generateSeedPoints(pixelGrid, width, wordHeight, maxPaddedWidth, i);
-    points = points.concat(wordPoints);
-  }
+  var pixelGrids = calculatePixelGrids(words, widths, wordHeight);
+  var points = generateSeedPoints(words, pixelGrids, widths, wordHeight, maxPaddedWidth);
 
   return points;
 
 }
 
 
-function measureWord(word: string, height: number) {
+function measureWidths(words: string[], wordHeight: number): number[] {
+  let widths = words.map(word => {
+    return measureWord(word, wordHeight);
+  });
+  return widths;
+}
+
+
+function measureWord(word: string, height: number): number {
   let canvas = document.createElement('canvas');
   let ctx = canvas.getContext('2d');
   ctx.font = `${height}px sans-serif`;
   let width = Math.ceil(ctx.measureText(word).width);
   return width;
+}
+
+
+function calculatePixelGrids(words: string[], widths: number[], wordHeight: number): boolean[][] {
+  let pixelGrids: boolean[][] = [];
+  for (let i = 0, word: string, width: number; i < words.length; i++) {
+    word = words[i];
+    width = widths[i];
+    pixelGrids.push(calculatePixelGrid(word, width, wordHeight));
+  }
+  return pixelGrids;
 }
 
 
@@ -87,7 +89,19 @@ function isPixelLit(pixelGrid: boolean[], gridWidth: number, gridHeight: number,
 }
 
 
-function generateSeedPoints(pixelGrid: boolean[], gridWidth: number, gridHeight: number, maxGridWidth: number, index: number) {
+function generateSeedPoints(words: string[], pixelGrids: boolean[][], widths: number[], wordHeight: number, maxPaddedWidth: number) {
+  let points: Vector[] = [];
+  for (let i = 0, pixelGrid: boolean[], width: number, wordPoints: Vector[]; i < words.length; i++) {
+    pixelGrid = pixelGrids[i];
+    width = widths[i];
+    wordPoints = generateWordSeedPoints(pixelGrid, width, wordHeight, maxPaddedWidth, i);
+    points = points.concat(wordPoints);
+  }
+  return points;
+}
+
+
+function generateWordSeedPoints(pixelGrid: boolean[], gridWidth: number, gridHeight: number, maxGridWidth: number, index: number) {
   const SEED_GRID_SIZE = getSeedGridSize();
 
   const xOffset = Math.floor((maxGridWidth - gridWidth) / 2) + BOX_PADDING;
