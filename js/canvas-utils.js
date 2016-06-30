@@ -1,0 +1,1 @@
+System.register([],function(t,e){"use strict";function i(t,e,i){t.setAttribute("width",""+e),t.setAttribute("height",""+i)}e&&e.id;return t("setCanvasSize",i),{setters:[],execute:function(){}}});
