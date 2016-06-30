@@ -9,7 +9,7 @@ var $ = require('gulp-load-plugins')();
 
 
 var CONFIG = {
-  is_release: !!argv.release
+  is_release: !!argv.release || process.argv[2] === 'gh-pages'
 };
 
 var reload = browserSync.reload;
@@ -43,9 +43,11 @@ gulp.task('sass', function () {
     .pipe($.sass({
       outputStyle: output_style
     }).on('error', $.sass.logError))
-    .pipe($.autoprefixer({browsers: [
-    	'last 2 versions'
-    ]}))
+    .pipe($.autoprefixer({
+      browsers: [
+        'last 2 versions'
+      ]
+    }))
     .pipe(gulp.dest('./dist/css'));
 });
 
@@ -57,10 +59,24 @@ gulp.task('build-html', ['sass', 'copy-system-js'], function () {
     './dist/css/**/*.css'
   ], {read: false});
 
+  var sw_source = gulp.src('./src/service-worker-registration.js');
+
   return target
     .pipe($.inject(sources, {ignorePath: '/dist/'}))
+    .pipe($.inject(sw_source, {
+      name: 'sw',
+      transform: function (filePath, file) {
+        // return file contents as string 
+        return '<script>' + file.contents.toString('utf8') + '</script>';
+      }
+    }))
     .pipe($.if(CONFIG.is_release, $.minifyHtml()))
     .pipe(gulp.dest('./dist'));
+});
+
+
+gulp.task('copy-cname', function () {
+  gulp.src('./src/CNAME').pipe(gulp.dest('./dist'));
 });
 
 gulp.task('build', ['build-html', 'compile-typescript']);
@@ -75,6 +91,23 @@ gulp.task('serve', ['default'], function () {
   });
 
   gulp.watch(['./src/**/*', './gulpfile.js'], ['build', reload]);
+});
+
+
+gulp.task('generate-service-worker', function (callback) {
+  var path = require('path');
+  var swPrecache = require('sw-precache');
+  var rootDir = 'dist';
+
+  swPrecache.write(path.join(rootDir, 'service-worker.js'), {
+    staticFileGlobs: [rootDir + '/**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff}'],
+    stripPrefix: rootDir
+  }, callback);
+});
+
+
+gulp.task('gh-pages', ['build', 'copy-cname', 'generate-service-worker'], function () {
+  return gulp.src('./dist/**/*').pipe($.ghPages());
 });
 
 
