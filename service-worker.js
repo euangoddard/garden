@@ -29,7 +29,7 @@
 
 
 /* eslint-disable quotes, comma-spacing */
-var PrecacheConfig = [["/css/flowers.css","9af3130d27ec1ae16b2c58401f5c515c"],["/index.html","7b90f0dd90f4f7d7087ce011739a5a28"],["/js/bootstrap.js","01d009b9913f75c829ff24936b214ff5"],["/js/canvas-utils.js","209b0bab6602b94904cca27442adfe76"],["/js/garden.js","6a7fadb1e482bd428e6face4d752443c"],["/js/lib/system.js","0774a3272bf77710575025c384ac91b1"],["/js/vector.js","00d32dfd817f827f3911851021656ea3"],["/js/word-pixels.js","874d272e36e5bddc359bcd6cbe1e5caa"]];
+var PrecacheConfig = [["/css/flowers.css","c560310fb49ec2499388c83a979c8a09"],["/favicon.png","3a7a8182a6e1b9df15810d06f580dee3"],["/index.html","bda2b0a8cadc884b4d36e60cfc1dc45e"],["/js/bootstrap.js","c4657689afa3d5b234d6683db910b1cf"],["/js/canvas-utils.js","a734c518bc324e861161e43be073c284"],["/js/garden.js","c1626b112783b739d8e155499d3703f2"],["/js/lib/system.js","0774a3272bf77710575025c384ac91b1"],["/js/vector.js","811f6b240f24cb02d52222bf80bfceda"],["/js/word-pixels.js","7c261bcc6cbc266574a8485bcf71f559"]];
 /* eslint-enable quotes, comma-spacing */
 var CacheNamePrefix = 'sw-precache-v1--' + (self.registration ? self.registration.scope : '') + '-';
 
