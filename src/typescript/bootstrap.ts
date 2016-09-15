@@ -38,6 +38,9 @@ function populateGarden(canvas: HTMLCanvasElement, garden: Garden) {
   setCanvasSize(canvas, gardenWidth, gardenHeight);
 
   let message: string = location.hash.slice(1) || 'Flowers are everywhere';
+  if (message[0] === '!') {
+    message = rot13(message.slice(1));
+  }
   let wordGridPoints = generatePixelGrid(message, gardenWidth, gardenHeight);
 
   wordGridPoints.forEach((point) => {
@@ -69,8 +72,18 @@ function bindEvents(canvas: HTMLCanvasElement, garden: Garden): void {
   window.addEventListener('hashchange', () => {
     populateGarden(canvas, garden);
   });
-  
+
   document.querySelector('#close-welcome').addEventListener('click', () => {
     document.querySelector('#welcome').classList.add('hidden');
   });
+}
+
+function rot13(value: string): string {
+  const valueRot13 = value.split('').map((char: string) => {
+    if (!char.match(/[A-Za-z]/)) return char;
+    let code = Math.floor(char.charCodeAt(0) / 97);
+    let codeRotated = (char.toLowerCase().charCodeAt(0) - 83) % 26 || 26;
+    return String.fromCharCode(codeRotated + ((code == 0) ? 64 : 96));
+  }).join('');
+  return valueRot13;
 }
